@@ -132,3 +132,30 @@ if length:
     admin_password = get_data(length)
 else:
     print("Could not determine length.")
+```
+## 6. Key Learnings/Concepts
+
+Blind SQL Injection: This is necessary when the application hides database data and errors.
+
+Boolean Oracle: The success of the attack hinges on a single, binary difference in the application's response (e.g., the presence or absence of a specific message).
+
+Sequential Information Retrieval: Blind SQLi is a methodical, automated process of asking a thousand simple true/false questions to extract complex information, one piece at a time.
+
+Core SQL Functions:
+
+LENGTH(string): Returns the length of a string.
+
+SUBSTRING(string, start, length): Extracts a substring starting at the specified position (start index is typically 1, not 0).
+
+Automation is Key: Due to the large number of requests required, tools like Burp Intruder (Cluster Bomb attack type) or custom scripts (like Python requests) are essential for efficiency.
+
+## 7. Mitigation
+Preventing Blind SQL Injection requires layered defense:
+
+Parameterized Queries (Prepared Statements): The primary defense. This ensures the entire TrackingId value is treated as inert data and cannot be executed as part of the SQL logic.
+
+Input Validation: Strictly validate and sanitize all input (even in cookies and headers). Reject any data in the TrackingId cookie that contains SQL special characters (', --, AND, etc.).
+
+Generic Responses: The application should be designed so that its output is identical, regardless of the success or failure of a benign, non-data-returning query. If the backend query returns a different status for true/false, the application must normalize the visible output to prevent it from becoming an oracle.
+
+Least Privilege: Configure the database connection used by the web application to have the minimum necessary permissions. The application should not be able to query the users table or sensitive data if its job is only to display product information.
